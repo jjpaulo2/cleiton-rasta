@@ -1,0 +1,24 @@
+[project]
+name = "cleiton-rasta"
+version = "0.1.0"
+description = "Bot de discord do servidor de Discord dos \"Eternos Pratas\""
+authors = [
+    {name = "João Paulo Carvalho",email = "jjpaulo2@protonmail.com"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "discord-py (>=2.6.2,<3.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.12.10"
+mypy = "^1.17.1"
+bandit = "^1.8.6"
+
