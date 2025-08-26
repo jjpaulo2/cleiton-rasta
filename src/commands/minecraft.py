@@ -59,8 +59,8 @@ class MinecraftCommands(Group):
 
     @command(name="comando", description="Envia comando ao servidor de Minecraft")
     @describe(command="O comando que será enviado ao servidor")
-    @has_role(DISCORD_ADMIN_ROLE_ID)
     @check(is_channel(DISCORD_MINECRAFT_CHANNEL_ID))
+    @has_role(DISCORD_ADMIN_ROLE_ID)
     async def send_command(self, interaction: Interaction, command: str):
         try:
             await interaction.response.defer()
