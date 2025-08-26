@@ -4,7 +4,7 @@ from oci import config
 from oci.core import ComputeClient
 
 
-class MineDosCrazy:
+class OracleIntegration:
 
     def __init__(self, machine_id: str) -> None:
         self.config = config.from_file()

@@ -2,6 +2,8 @@ from os import getenv
 
 
 DISCORD_TOKEN = getenv("DISCORD_TOKEN", "")
-DISCORD_GUILD_ID = getenv("DISCORD_GUILD_ID", "")
+DISCORD_GUILD_ID = int(getenv("DISCORD_GUILD_ID", "0"))
+DISCORD_ADMIN_ROLE_ID = int(getenv("DISCORD_ADMIN_ROLE_ID", "0"))
+DISCORD_MINECRAFT_CHANNEL_ID = int(getenv("DISCORD_MINECRAFT_CHANNEL_ID", "0"))
 
 MACHINE_ID = getenv("MACHINE_ID", "")

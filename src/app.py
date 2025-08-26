@@ -1,9 +1,10 @@
-from functools import cached_property
+from functools import cached_property, lru_cache
 
 from discord import Client, Intents, Object
 from discord.app_commands import CommandTree
 
-from src.integrations.minedoscrazy import MineDosCrazy
+from src.integrations.rcon import RconIntegration
+from src.integrations.oracle import OracleIntegration
 from src.commands.minecraft import MinecraftCommands
 from src.settings import DISCORD_GUILD_ID, MACHINE_ID
 
@@ -16,7 +17,8 @@ class CleitonRasta(Client):
         _tree = CommandTree(self)
         _tree.add_command(
             MinecraftCommands(
-                MineDosCrazy(MACHINE_ID)
+                OracleIntegration(MACHINE_ID),
+                RconIntegration('localhost', 'minedoscrazy', 25575)
             ),
             guild=self.guild
         )
@@ -26,5 +28,6 @@ class CleitonRasta(Client):
         await self.tree.sync(guild=self.guild)
 
 
-intents = Intents.default()
-client = CleitonRasta(intents=intents)
+@lru_cache
+def get_bot() -> CleitonRasta:
+    return CleitonRasta(intents=Intents.default())
