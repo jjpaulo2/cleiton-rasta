@@ -18,7 +18,7 @@ class CleitonRasta(Client):
         _tree.add_command(
             MinecraftCommands(
                 OracleIntegration(MACHINE_ID),
-                RconIntegration('localhost', 'minedoscrazy', 25575)
+                RconIntegration('minedoscrazy', 'localhost', 25575)
             ),
             guild=self.guild
         )
