@@ -1,0 +1,13 @@
+services:
+
+  bot:
+    build: .
+    restart: unless-stopped
+    volumes:
+      - ${HOME}/.oci:/root/.oci
+    environment:
+      DISCORD_TOKEN: ${DISCORD_TOKEN}
+      DISCORD_GUILD_ID: ${DISCORD_GUILD_ID}
+      DISCORD_ADMIN_ROLE_ID: ${DISCORD_ADMIN_ROLE_ID}
+      DISCORD_MINECRAFT_CHANNEL_ID: ${DISCORD_MINECRAFT_CHANNEL_ID}
+      MACHINE_ID: ${MACHINE_ID}
