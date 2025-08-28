@@ -1,5 +1,4 @@
 from functools import lru_cache
-
 from structlog import get_logger
 
 from oci import config

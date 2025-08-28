@@ -34,6 +34,8 @@ class RconIntegration:
         try:
             await self._connect()
             ready = True
+        except Exception:
+            ready = False
         finally:
             await self._disconnect()
         return ready
