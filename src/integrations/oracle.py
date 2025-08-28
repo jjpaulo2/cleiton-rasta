@@ -27,11 +27,11 @@ class OracleIntegration:
 
     @cached_property
     def _compute_client(self):
-        return ComputeClient(self.auth.config)
+        return ComputeClient(self.auth.config, **self.auth.kwargs)
 
     @cached_property
     def _usage_client(self):
-        return UsageapiClient(self.auth.config)
+        return UsageapiClient(self.auth.config, **self.auth.kwargs)
 
     @cached_property
     def usage_payload(self):
