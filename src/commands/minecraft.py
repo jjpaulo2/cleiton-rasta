@@ -90,15 +90,15 @@ class MinecraftCommands(Group):
                 )
                 return
             
-            if not (await self.rcon.is_ready()):
-                await interaction.followup.send(
-                    ephemeral=True,
-                    embed=Embed(
-                        description="O servidor de Minecraft está desligando.",
-                        color=Color.red()
-                    )
-                )
-                return
+            # if not (await self.rcon.is_ready()):
+            #     await interaction.followup.send(
+            #         ephemeral=True,
+            #         embed=Embed(
+            #             description="O servidor de Minecraft está desligando.",
+            #             color=Color.red()
+            #         )
+            #     )
+            #     return
 
             await interaction.followup.send(
                 ephemeral=True,
