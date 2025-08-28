@@ -3,11 +3,29 @@ from functools import cached_property, lru_cache
 from discord import Client, Intents, Object
 from discord.app_commands import CommandTree
 
+from src.commands.minecraft import MinecraftCommands
 from src.loaders.oracle_auth import OracleAuthLoader
 from src.integrations.rcon import RconIntegration
 from src.integrations.oracle import OracleIntegration
-from src.commands.minecraft import MinecraftCommands
-from src.settings import DISCORD_GUILD_ID, MACHINE_ID
+from src.settings import (
+    OCI_MACHINE_ID,
+    MINECRAFT_RCON_HOST,
+    MINECRAFT_RCON_PASSWORD,
+    MINECRAFT_RCON_PORT,
+    DISCORD_GUILD_ID
+)
+
+
+oracle_integration = OracleIntegration(
+    machine_id=OCI_MACHINE_ID,
+    auth=OracleAuthLoader()
+)
+
+rcon_integration = RconIntegration(
+    password=MINECRAFT_RCON_PASSWORD,
+    host=MINECRAFT_RCON_HOST,
+    port=MINECRAFT_RCON_PORT
+)
 
 
 class CleitonRasta(Client):
@@ -18,8 +36,8 @@ class CleitonRasta(Client):
         _tree = CommandTree(self)
         _tree.add_command(
             MinecraftCommands(
-                OracleIntegration(MACHINE_ID, OracleAuthLoader()),
-                RconIntegration('minedoscrazy', 'localhost', 25575)
+                oracle=oracle_integration,
+                rcon=rcon_integration
             ),
             guild=self.guild
         )
