@@ -1,10 +1,14 @@
 services:
 
   bot:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        USER: ${USER}
     restart: unless-stopped
     volumes:
-      - ${HOME}/.oci:/root/.oci
+      - ${HOME}/.oci:/home/${USER}/.oci
     environment:
       DISCORD_TOKEN: ${DISCORD_TOKEN}
       DISCORD_GUILD_ID: ${DISCORD_GUILD_ID}
