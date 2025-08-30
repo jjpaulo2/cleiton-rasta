@@ -71,7 +71,7 @@ class MinecraftCommands(Group):
                     color=Color.green()
                 )
             )
-            await self.notifications.server_on(
+            await self.notifications.server_off(
                 channel=interaction.client.get_channel(DISCORD_MINECRAFT_CHANNEL_ID), # type: ignore
                 user=interaction.user
             )
