@@ -9,6 +9,8 @@ services:
     restart: unless-stopped
     volumes:
       - ${HOME}/.oci:/home/${USER}/.oci
+    env_file:
+      - .env
     environment:
       DISCORD_TOKEN: ${DISCORD_TOKEN}
       DISCORD_GUILD_ID: ${DISCORD_GUILD_ID}
