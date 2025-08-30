@@ -9,7 +9,7 @@ from src.integrations.rcon import RconIntegration
 from src.integrations.oracle import OracleIntegration
 from src.settings import (
     OCI_MACHINE_ID,
-    MINECRAFT_RCON_HOST,
+    MINECRAFT_DOMAIN_NAME,
     MINECRAFT_RCON_PASSWORD,
     MINECRAFT_RCON_PORT,
     DISCORD_GUILD_ID
@@ -23,7 +23,7 @@ oracle_integration = OracleIntegration(
 
 rcon_integration = RconIntegration(
     password=MINECRAFT_RCON_PASSWORD,
-    host=MINECRAFT_RCON_HOST,
+    host=MINECRAFT_DOMAIN_NAME,
     port=MINECRAFT_RCON_PORT
 )
 

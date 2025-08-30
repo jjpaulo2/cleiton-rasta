@@ -9,6 +9,7 @@ from discord.app_commands import (
     describe
 )
 
+from src.notifications.minecraft import MinecraftNotifications
 from src.integrations.rcon import RconIntegration
 from src.settings import DISCORD_ADMIN_ROLE_ID, DISCORD_MINECRAFT_CHANNEL_ID
 from src.integrations.oracle import OracleIntegration
@@ -20,10 +21,12 @@ class MinecraftCommands(Group):
     def __init__(
         self,
         oracle: OracleIntegration,
-        rcon: RconIntegration
+        rcon: RconIntegration,
+        notifications: MinecraftNotifications = MinecraftNotifications()
     ):
         self.oracle = oracle
         self.rcon = rcon
+        self.notifications = notifications
         super().__init__(
             name='minecraft',
             description='Gerencie o servidor de minecraft'
@@ -40,6 +43,10 @@ class MinecraftCommands(Group):
                     description="Comando enviado com sucesso!",
                     color=Color.green()
                 )
+            )
+            await self.notifications.server_on(
+                channel=interaction.client.get_channel(DISCORD_MINECRAFT_CHANNEL_ID), # type: ignore
+                user=interaction.user
             )
 
         except Exception as e:
@@ -63,6 +70,10 @@ class MinecraftCommands(Group):
                     description="Comando enviado com sucesso!",
                     color=Color.green()
                 )
+            )
+            await self.notifications.server_on(
+                channel=interaction.client.get_channel(DISCORD_MINECRAFT_CHANNEL_ID), # type: ignore
+                user=interaction.user
             )
 
         except Exception as e:
@@ -89,16 +100,6 @@ class MinecraftCommands(Group):
                     )
                 )
                 return
-            
-            # if not (await self.rcon.is_ready()):
-            #     await interaction.followup.send(
-            #         ephemeral=True,
-            #         embed=Embed(
-            #             description="O servidor de Minecraft está desligando.",
-            #             color=Color.red()
-            #         )
-            #     )
-            #     return
 
             await interaction.followup.send(
                 ephemeral=True,
