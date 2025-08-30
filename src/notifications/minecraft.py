@@ -13,15 +13,18 @@ class MinecraftNotifications:
         )
         embed.add_field(
             name='Endereço / IP',
-            value=f"`{MINECRAFT_DOMAIN_NAME}`"
+            value=f"`{MINECRAFT_DOMAIN_NAME}`",
+            inline=False
         )
         embed.add_field(
             name='Mapa online',
-            value=f"[map.{MINECRAFT_DOMAIN_NAME}](https://map.{MINECRAFT_DOMAIN_NAME})"
+            value=f"[map.{MINECRAFT_DOMAIN_NAME}](https://map.{MINECRAFT_DOMAIN_NAME})",
+            inline=False
         )
         embed.add_field(
             name='Monitoramento',
-            value=f"[monitoring.{MINECRAFT_DOMAIN_NAME}](https://monitoring.{MINECRAFT_DOMAIN_NAME})"
+            value=f"[monitoring.{MINECRAFT_DOMAIN_NAME}](https://monitoring.{MINECRAFT_DOMAIN_NAME})",
+            inline=False
         )
         embed.set_author(
             name=user.display_name,
