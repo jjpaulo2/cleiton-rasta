@@ -1,6 +1,6 @@
 from discord import Embed, User, Member, Color, TextChannel
 
-from src.settings import MINECRAFT_DOMAIN_NAME
+from src.settings import MINECRAFT_DOMAIN_NAME, MINECRAFT_PASSWORD
 
 
 class MinecraftNotifications:
@@ -17,13 +17,17 @@ class MinecraftNotifications:
             inline=False
         )
         embed.add_field(
-            name='Mapa online',
-            value=f"[map.{MINECRAFT_DOMAIN_NAME}](https://map.{MINECRAFT_DOMAIN_NAME})",
+            name='Senha',
+            value=f"`{MINECRAFT_PASSWORD}`",
             inline=False
         )
         embed.add_field(
-            name='Monitoramento',
-            value=f"[monitoring.{MINECRAFT_DOMAIN_NAME}](https://monitoring.{MINECRAFT_DOMAIN_NAME})",
+            name='Links',
+            value=(
+                f"[Bluemap](https://map.{MINECRAFT_DOMAIN_NAME}) | "
+                f"[Grafana](https://monitoring.{MINECRAFT_DOMAIN_NAME}) | "
+                f"[Portainer](https://admin.{MINECRAFT_DOMAIN_NAME})"
+            ),
             inline=False
         )
         embed.set_author(
