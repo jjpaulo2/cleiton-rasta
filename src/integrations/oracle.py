@@ -4,6 +4,7 @@ from functools import cached_property
 
 from oci import Response
 from oci.core import ComputeClient
+from oci.core.models import Instance, Shape, UpdateInstanceDetails
 from oci.usage_api import UsageapiClient
 from oci.usage_api.models import RequestSummarizedUsagesDetails, Filter, Dimension
 
@@ -32,7 +33,7 @@ class OracleIntegration:
     @cached_property
     def _usage_client(self):
         return UsageapiClient(self.auth.config, **self.auth.kwargs)
-
+    
     @cached_property
     def usage_payload(self):
         return RequestSummarizedUsagesDetails(
@@ -51,22 +52,63 @@ class OracleIntegration:
                 ]
             )
         )
+    
+    async def get_instance_data(self) -> Instance:
+        response = await asyncio.to_thread(
+            self._compute_client.get_instance,
+            self.machine_id
+        )
+        if isinstance(response, Response):
+            return response.data
+        raise EnvironmentError("Failed to get instance data!")
 
     async def is_machine_running(self) -> bool:
-        response = await asyncio.to_thread(self._compute_client.get_instance, self.machine_id)
-        if isinstance(response, Response):
-            return response.data.lifecycle_state == "RUNNING"
-        return False
+        try:
+            data = await self.get_instance_data()
+            return data.lifecycle_state == "RUNNING"
+        except Exception:
+            return False
     
     async def start_machine(self):
-        await asyncio.to_thread(self._compute_client.instance_action, self.machine_id, "START")
+        await asyncio.to_thread(
+            self._compute_client.instance_action,
+            self.machine_id,
+            "START"
+        )
 
     async def stop_machine(self):
-        await asyncio.to_thread(self._compute_client.instance_action, self.machine_id, "SOFTSTOP")
+        await asyncio.to_thread(
+            self._compute_client.instance_action,
+            self.machine_id,
+            "SOFTSTOP"
+        )
 
-    async def current_cost(self) -> tuple[float, str, str]:
-        response = await asyncio.to_thread(self._usage_client.request_summarized_usages, self.usage_payload)
+    async def get_current_cost(self) -> tuple[float, str, str]:
+        response = await asyncio.to_thread(
+            self._usage_client.request_summarized_usages,
+            self.usage_payload
+        )
         if isinstance(response, Response):
             item = response.data.items[0]
             return item.computed_amount, item.currency, get_current_month()
         return 0.0, "BRL", get_current_month()
+
+    async def get_machine_shapes(self) -> list[Shape]:
+        data = await self.get_instance_data()
+        shapes = await asyncio.to_thread(
+            self._compute_client.list_shapes,
+            compartment_id=data.compartment_id,
+            availability_domain=data.availability_domain
+        )
+        return [
+            shape for shape in shapes.data # type: ignore
+            if shape.shape.startswith('VM.Standard.E2')
+        ]
+    
+    async def get_machine_shape(self, name: str):
+        await asyncio.to_thread(
+            self._compute_client.update_instance,
+            self.machine_id,
+            UpdateInstanceDetails(shape=name)
+        )
+    
