@@ -111,7 +111,7 @@ class MinecraftCommands(Group):
     async def cost(self, interaction: Interaction):
         try:
             await interaction.response.defer(ephemeral=True)
-            cost, currency, month = await self.oracle.current_cost()
+            cost, currency, month = await self.oracle.get_current_cost()
             embed = Embed(
                 description="Informações consultadas com sucesso!",
                 color=Color.green()
