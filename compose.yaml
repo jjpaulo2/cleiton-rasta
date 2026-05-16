@@ -3,12 +3,7 @@ services:
   bot:
     build:
       context: .
-      dockerfile: Dockerfile
-      args:
-        USER: ${USER}
     restart: unless-stopped
-    env_file:
-      - .env
     environment:
       DISCORD_TOKEN: ${DISCORD_TOKEN}
       DISCORD_GUILD_ID: ${DISCORD_GUILD_ID}
