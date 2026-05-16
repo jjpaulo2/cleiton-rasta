@@ -3,15 +3,23 @@ from functools import cached_property, lru_cache
 from discord import Client, Intents, Object, Message, VoiceChannel, TextChannel
 from discord.abc import GuildChannel
 from discord.app_commands import CommandTree
+from pyportainer import Portainer
 
+from services.send_command import SendCommandService
 from src.commands.general import GeneralCommands
 from src.commands.minecraft import MinecraftCommands
 from src.settings import (
     DISCORD_GUILD_ID,
     DISCORD_MESSAGES_CHANNEL_ID,
-    DISCORD_MUSIC_CHANNEL_ID
+    DISCORD_MUSIC_CHANNEL_ID,
+    PORTAINER_API_KEY,
+    PORTAINER_API_URL
 )
 
+portainer = Portainer(
+    api_url=PORTAINER_API_URL,
+    api_key=PORTAINER_API_KEY
+)
 
 
 class CleitonRasta(Client):
@@ -36,13 +44,13 @@ class CleitonRasta(Client):
         _tree = CommandTree(self)
         _tree.add_command(
             GeneralCommands(),
-            guild=self.guild
+            guild=self.guild,
         )
         _tree.add_command(
             MinecraftCommands(
-                oracle=oracle_integration
+                command_service=SendCommandService(portainer),
             ),
-            guild=self.guild
+            guild=self.guild,
         )
         return _tree
 
