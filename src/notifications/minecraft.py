@@ -21,15 +21,6 @@ class MinecraftNotifications:
             value=f"`{MINECRAFT_PASSWORD}`",
             inline=False
         )
-        embed.add_field(
-            name='Links',
-            value=(
-                f"[Bluemap](https://map.{MINECRAFT_DOMAIN_NAME}) | "
-                f"[Grafana](https://monitoring.{MINECRAFT_DOMAIN_NAME}) | "
-                f"[Portainer](https://admin.{MINECRAFT_DOMAIN_NAME})"
-            ),
-            inline=False
-        )
         embed.set_author(
             name=user.display_name,
             icon_url=user.avatar.url if user.avatar else None

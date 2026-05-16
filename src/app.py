@@ -6,20 +6,12 @@ from discord.app_commands import CommandTree
 
 from src.commands.general import GeneralCommands
 from src.commands.minecraft import MinecraftCommands
-from src.loaders.oracle_auth import OracleAuthLoader
-from src.integrations.oracle import OracleIntegration
 from src.settings import (
-    OCI_MACHINE_ID,
     DISCORD_GUILD_ID,
     DISCORD_MESSAGES_CHANNEL_ID,
     DISCORD_MUSIC_CHANNEL_ID
 )
 
-
-oracle_integration = OracleIntegration(
-    machine_id=OCI_MACHINE_ID,
-    auth=OracleAuthLoader()
-)
 
 
 class CleitonRasta(Client):
