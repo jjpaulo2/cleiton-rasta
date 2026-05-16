@@ -17,7 +17,7 @@ class PortainerService:
     def __init__(self, portainer: Portainer):
         self.portainer = portainer
 
-    async def _get_container_id(self, container_name: str, endpoint_id: int) -> str | None:
+    async def _get_container_id(self, container_name: str, endpoint_id: int) -> str:
         endpoints = await self.portainer.get_endpoints()
         
         for endp in endpoints:
@@ -32,7 +32,7 @@ class PortainerService:
             if f"/{container_name}" in container.names:
                 return container.id
             
-        return None
+        raise ValueError(f"Container '{container_name}' não encontrado no endpoint #{endpoint_id}.")
 
     async def turn_off_heavy_node(self):
         await self.portainer.start_container(
