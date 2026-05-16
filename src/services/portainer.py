@@ -5,10 +5,10 @@ from tenacity import retry, stop_after_attempt, wait_fixed
 
 from src.settings import (
     MINECRAFT_CONTAINER_NAME,
-    ORACLE_CLI_IMAGE,
     PORTAINER_MANAGER_NODE_ENDPOINT_ID,
     PORTAINER_HEAVY_NODE_ENDPOINT_ID,
-    CLUSTER_HEAVY_NODE_ID
+    TURN_OFF_HEAVY_NODE_CONTAINER_NAME,
+    TURN_ON_HEAVY_NODE_CONTAINER_NAME
 )
 
 
@@ -33,62 +33,23 @@ class PortainerService:
                 return container.id
             
         return None
-    
-    async def _run_container(self, container_name: str, endpoint_id: int, image: str, command: list[str]):
-        container_id = await self._get_container_id(container_name, endpoint_id)
-        
-        if not container_id:
-            container = await self.portainer.container_create(
-                endpoint_id=endpoint_id,
-                name=container_name,
-                image=image,
-                config={
-                    "Entrypoint": command,
-                }
-            )
-            container_id = container.id
-
-        await self.portainer.start_container(
-            endpoint_id=endpoint_id,
-            container_id=container_id
-        )
 
     async def turn_off_heavy_node(self):
-        await self._run_container(
-            container_name="turn-off-cluster-heavy-node-0",
+        await self.portainer.start_container(
             endpoint_id=PORTAINER_MANAGER_NODE_ENDPOINT_ID,
-            image=ORACLE_CLI_IMAGE,
-            command=[
-                "oci",
-                "compute",
-                "instance",
-                "action",
-                "--instance-id",
-                CLUSTER_HEAVY_NODE_ID,
-                "--action",
-                "SOFTSTOP",
-                "--auth",
-                "instance_principal"
-            ]
+            container_id=await self._get_container_id(
+                container_name=TURN_OFF_HEAVY_NODE_CONTAINER_NAME,
+                endpoint_id=PORTAINER_MANAGER_NODE_ENDPOINT_ID,
+            ),
         )
 
     async def turn_on_heavy_node(self):
-        await self._run_container(
-            container_name="turn-on-cluster-heavy-node-0",
+        await self.portainer.start_container(
             endpoint_id=PORTAINER_MANAGER_NODE_ENDPOINT_ID,
-            image=ORACLE_CLI_IMAGE,
-            command=[
-                "oci",
-                "compute",
-                "instance",
-                "action",
-                "--instance-id",
-                CLUSTER_HEAVY_NODE_ID,
-                "--action",
-                "START",
-                "--auth",
-                "instance_principal"
-            ]
+            container_id=await self._get_container_id(
+                container_name=TURN_ON_HEAVY_NODE_CONTAINER_NAME,
+                endpoint_id=PORTAINER_MANAGER_NODE_ENDPOINT_ID,
+            ),
         )
     
     @retry(
