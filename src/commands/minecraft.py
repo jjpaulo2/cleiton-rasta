@@ -1,32 +1,33 @@
 from discord import Interaction, Embed, Color
 from discord.app_commands import Group, command
 
-from src.services.send_command import SendCommandService
-from src.settings import PORTAINER_NODE_GAMES
+from src.services.portainer import PortainerService
+from src.settings import DISCORD_NOTIFICATIONS_CHANNEL_ID
 
 
 class MinecraftCommands(Group):
 
     def __init__(
         self,
-        command_service: SendCommandService,
+        portainer_service: PortainerService,
     ):
-        self.command_service = command_service
+        self.portainer = portainer_service
         super().__init__(
             name='minecraft',
-            description='Gerencie o servidor de minecraft'
+            description='Gerencie o servidor de Minecraft'
         )
 
     @command(name="ligar", description="Liga o servidor de Minecraft")
     async def turn_on(self, interaction: Interaction):
         try:
             await interaction.response.defer(ephemeral=True)
-            await self.command_service.turn_on(PORTAINER_NODE_GAMES)
+            await self.portainer.turn_on_heavy_node()
+            await self.portainer.start_minecraft_server()
             await interaction.followup.send(
                 ephemeral=True,
-                embed=Embed(
-                    description="Comando enviado com sucesso!",
-                    color=Color.green()
+                content=(
+                    "Comando enviado com sucesso!\n"
+                    f"Quando o servidor estiver pronto, avisarei em <#{DISCORD_NOTIFICATIONS_CHANNEL_ID}>."
                 )
             )
 
@@ -44,13 +45,17 @@ class MinecraftCommands(Group):
     async def turn_off(self, interaction: Interaction):
         try:
             await interaction.response.defer(ephemeral=True)
-            await self.command_service.turn_off(PORTAINER_NODE_GAMES)
+            await self.portainer.stop_minecraft_server()
+            await self.portainer.turn_off_heavy_node()
             await interaction.followup.send(
                 ephemeral=True,
-                embed=Embed(
-                    description="Comando enviado com sucesso!",
-                    color=Color.green()
-                )
+                content=("Comando enviado com sucesso!")
+            )
+        
+        except ConnectionError:
+            await interaction.followup.send(
+                ephemeral=True,
+                content="O servidor já está desligado!"
             )
 
         except Exception as e:

@@ -5,7 +5,7 @@ from discord.abc import GuildChannel
 from discord.app_commands import CommandTree
 from pyportainer import Portainer
 
-from services.send_command import SendCommandService
+from src.services.portainer import PortainerService
 from src.commands.general import GeneralCommands
 from src.commands.minecraft import MinecraftCommands
 from src.settings import (
@@ -48,7 +48,7 @@ class CleitonRasta(Client):
         )
         _tree.add_command(
             MinecraftCommands(
-                command_service=SendCommandService(portainer),
+                portainer_service=PortainerService(portainer),
             ),
             guild=self.guild,
         )
