@@ -34,7 +34,7 @@ class MinecraftCommands(Group):
             await interaction.followup.send(
                 ephemeral=True,
                 content=(
-                    "Comando enviado com sucesso!\n"
+                    "✅ Comando enviado com sucesso!\n"
                     f"Quando o servidor estiver pronto, avisarei em <#{DISCORD_NOTIFICATIONS_CHANNEL_ID}>."
                 )
             )
@@ -47,10 +47,9 @@ class MinecraftCommands(Group):
             )
             await interaction.followup.send(
                 ephemeral=True,
-                embed=Embed(
-                    title="Ocorreu um erro ao tentar executar o comando!",
-                    description=str(e),
-                    color=Color.red()
+                content=(
+                    "🔴 Ocorreu um erro ao tentar executar o comando!\n"
+                    "Se você for leigo, não se desespere. Chame um dev para resolver isso."
                 )
             )
 
@@ -67,7 +66,7 @@ class MinecraftCommands(Group):
             await self.portainer.turn_off_heavy_node()
             await interaction.followup.send(
                 ephemeral=True,
-                content=("Comando enviado com sucesso!")
+                content=("✅ Comando enviado com sucesso!")
             )
         
         except ConnectionError:
@@ -77,7 +76,7 @@ class MinecraftCommands(Group):
             )
             await interaction.followup.send(
                 ephemeral=True,
-                content="O servidor já está desligado!"
+                content="✅ O servidor já está desligado!"
             )
 
         except Exception as e:
@@ -88,9 +87,8 @@ class MinecraftCommands(Group):
             )
             await interaction.followup.send(
                 ephemeral=True,
-                embed=Embed(
-                    title="Ocorreu um erro ao tentar executar o comando!",
-                    description=str(e),
-                    color=Color.red()
+                content=(
+                    "🔴 Ocorreu um erro ao tentar executar o comando!\n"
+                    "Se você for leigo, não se desespere. Chame um dev para resolver isso."
                 )
             )

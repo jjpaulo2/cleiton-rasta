@@ -45,10 +45,6 @@ class CleitonRasta(Client):
     def tree(self):
         _tree = CommandTree(self)
         _tree.add_command(
-            GeneralCommands(),
-            guild=self.guild,
-        )
-        _tree.add_command(
             MinecraftCommands(
                 portainer_service=PortainerService(portainer),
             ),
