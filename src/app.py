@@ -4,6 +4,7 @@ from discord import Client, Intents, Object, Message, VoiceChannel, TextChannel
 from discord.abc import GuildChannel
 from discord.app_commands import CommandTree
 from pyportainer import Portainer
+from structlog import get_logger
 
 from src.services.portainer import PortainerService
 from src.commands.general import GeneralCommands
@@ -24,6 +25,7 @@ portainer = Portainer(
 
 class CleitonRasta(Client):
     guild = Object(DISCORD_GUILD_ID)
+    logger = get_logger()
 
     @cached_property
     def messages_channel(self) -> TextChannel:
@@ -55,16 +57,27 @@ class CleitonRasta(Client):
         return _tree
 
     async def setup_hook(self) -> None:
+        self.logger.info("Sincronizando comandos do bot...")
         await self.tree.sync(guild=self.guild)
 
     async def on_message(self, message: Message):
         if message.author.bot:
             return
         if isinstance(message.channel, VoiceChannel):
+            self.logger.info(
+                "Mensagem enviada em canal de voz, apagando mensagem...",
+                channel=message.channel.name,
+                user=message.author.name,
+                message=message.content
+            )
             await message.delete()
     
     async def on_guild_channel_create(self, channel: GuildChannel):
         if isinstance(channel, VoiceChannel):
+            self.logger.info(
+                "Canal de voz criado, enviando mensagem de aviso...",
+                channel=channel.name
+            )
             await channel.send(
                 content=(
                     "Este chat não pode ser usado! "
