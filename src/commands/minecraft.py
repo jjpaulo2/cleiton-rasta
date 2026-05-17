@@ -30,6 +30,10 @@ class MinecraftCommands(Group):
         try:
             await interaction.response.defer(ephemeral=True)
             await self.portainer.turn_on_heavy_node()
+            self.logger.info(
+                "Máquina ligada. Iniciando o servidor de Minecraft...",
+                user=interaction.user.name
+            )
             await self.portainer.start_minecraft_server()
             await interaction.followup.send(
                 ephemeral=True,
@@ -63,6 +67,10 @@ class MinecraftCommands(Group):
         try:
             await interaction.response.defer(ephemeral=True)
             await self.portainer.stop_minecraft_server()
+            self.logger.info(
+                "Servidor parado. Desligando a máquina...",
+                user=interaction.user.name
+            )
             await self.portainer.turn_off_heavy_node()
             await interaction.followup.send(
                 ephemeral=True,
