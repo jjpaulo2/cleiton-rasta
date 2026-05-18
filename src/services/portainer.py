@@ -1,7 +1,5 @@
-from asyncio import sleep
-
 from pyportainer import Portainer
-from tenacity import retry, stop_after_attempt, wait_fixed
+from tenacity import AsyncRetrying, stop_after_attempt, wait_fixed
 
 from src.settings import (
     MINECRAFT_CONTAINER_NAME,
@@ -51,19 +49,20 @@ class PortainerService:
                 endpoint_id=PORTAINER_MANAGER_NODE_ENDPOINT_ID,
             ),
         )
-    
-    @retry(
-        stop=stop_after_attempt(6),
-        wait=wait_fixed(10)
-    )
+
     async def start_minecraft_server(self):
-        await self.portainer.start_container(
-            endpoint_id=PORTAINER_HEAVY_NODE_ENDPOINT_ID,
-            container_id=await self._get_container_id(
-                container_name=MINECRAFT_CONTAINER_NAME,
-                endpoint_id=PORTAINER_HEAVY_NODE_ENDPOINT_ID,
-            ),
-        )
+        async for attempt in AsyncRetrying(
+            stop=stop_after_attempt(5),
+            wait=wait_fixed(15)
+        ):
+            with attempt:
+                await self.portainer.start_container(
+                    endpoint_id=PORTAINER_HEAVY_NODE_ENDPOINT_ID,
+                    container_id=await self._get_container_id(
+                        container_name=MINECRAFT_CONTAINER_NAME,
+                        endpoint_id=PORTAINER_HEAVY_NODE_ENDPOINT_ID,
+                    ),
+                )
 
     async def stop_minecraft_server(self):
         await self.portainer.stop_container(
