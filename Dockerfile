@@ -6,7 +6,6 @@ RUN addgroup $USER && \
     adduser -D -G $USER $USER
 
 USER "${USER}:${USER}"
-VOLUME [ "/home/${USER}/.oci" ]
 
 COPY ./src /srv/src
 COPY ./pyproject.toml /srv/pyproject.toml

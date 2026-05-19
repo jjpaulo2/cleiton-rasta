@@ -1,9 +1,9 @@
 services:
 
   bot:
-    build:
-      context: .
+    image: ghcr.io/jjpaulo2/cleiton-rasta:latest
     restart: unless-stopped
+    pull_policy: always
     environment:
       DISCORD_TOKEN: ${DISCORD_TOKEN}
       DISCORD_GUILD_ID: ${DISCORD_GUILD_ID}
