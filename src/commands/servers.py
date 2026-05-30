@@ -43,18 +43,18 @@ class ServersCommands(Group):
     async def turn_on(
         self,
         interaction: Interaction,
-        game: Choice[GameServer],
+        game: Choice[str],
     ):
         self.logger.info(
             f"Ligando o servidor...",
             user=interaction.user.name,
-            game=game.value.name,
+            game=game.value,
         )
 
         try:
             await interaction.response.defer(ephemeral=True)
             
-            game_server = SERVERS[game.value.name]
+            game_server = SERVERS[game.value]
             node_is_up = await self.portainer.node_is_up(
                 endpoint_id=game_server.node.endpoint_id,
             )
@@ -78,7 +78,7 @@ class ServersCommands(Group):
             self.logger.info(
                 "Máquina ligada. Iniciando o servidor...",
                 user=interaction.user.name,
-                game=game.value.name,
+                game=game.value,
             )
             await self.portainer.start_container(
                 endpoint_id=game_server.node.endpoint_id,
@@ -96,7 +96,7 @@ class ServersCommands(Group):
             self.logger.info(
                 "A máquina está demorando demais para ligar.",
                 user=interaction.user.name,
-                game=game.value.name,
+                game=game.value,
             )
             await interaction.edit_original_response(
                 content=(
@@ -109,7 +109,7 @@ class ServersCommands(Group):
             self.logger.error(
                 "Erro ao ligar o servidor!",
                 user=interaction.user.name,
-                game=game.value.name,
+                game=game.value,
                 error=str(e),
             )
             await interaction.edit_original_response(
@@ -125,16 +125,16 @@ class ServersCommands(Group):
     async def turn_off(
         self,
         interaction: Interaction,
-        game: Choice[GameServer],
+        game: Choice[str],
     ):
         self.logger.info(
             "Desligando o servidor...",
             user=interaction.user.name,
-            game=game.value.name,
+            game=game.value,
         )
 
         try:
-            game_server = SERVERS[game.value.name]
+            game_server = SERVERS[game.value]
             await interaction.response.defer(ephemeral=True)
             await interaction.edit_original_response(
                 content="⏳ Desligando o servidor...",
@@ -147,7 +147,7 @@ class ServersCommands(Group):
             self.logger.info(
                 "Servidor parado. Desligando a máquina...",
                 user=interaction.user.name,
-                game=game.value.name,
+                game=game.value,
             )
             await interaction.edit_original_response(
                 content="⏳ Desligando a máquina remota...",
@@ -168,7 +168,7 @@ class ServersCommands(Group):
             self.logger.info(
                 "Ignorando comando pois o servidor já está desligado.",
                 user=interaction.user.name,
-                game=game.value.name,
+                game=game.value,
             )
             await interaction.edit_original_response(
                 content="✅ O servidor já está desligado!",
@@ -178,7 +178,7 @@ class ServersCommands(Group):
             self.logger.error(
                 "Erro ao desligar o servidor!",
                 user=interaction.user.name,
-                game=game.value.name,
+                game=game.value,
                 error=str(e),
             )
             await interaction.edit_original_response(
