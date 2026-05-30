@@ -56,6 +56,18 @@ class MinecraftCommands(Group):
                     f"avisarei em <#{DISCORD_NOTIFICATIONS_CHANNEL_ID}>._"
                 )
             )
+        
+        except ConnectionError:
+            self.logger.info(
+                "A máquina está demorando demais para ligar.",
+                user=interaction.user.name
+            )
+            await interaction.edit_original_response(
+                content=(
+                    "😢 A máquina está demorando mais que o esperado para ligar.\n"
+                    "_Espere alguns segundos e tente rodar o comando novamente._"
+                )
+            )
 
         except Exception as e:
             self.logger.error(
