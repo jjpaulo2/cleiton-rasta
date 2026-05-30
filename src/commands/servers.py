@@ -14,7 +14,7 @@ from src.settings import games
 
 SERVERS = [
     Choice(name=server.name, value=server)
-    for server in games
+    for server in vars(games).values()
     if isinstance(server, GameServer)
 ]
 
