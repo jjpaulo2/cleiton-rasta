@@ -3,7 +3,7 @@ from src.settings.nodes import HEAVY_NODE
 
 
 MINECRAFT = GameServer(
-    name='minecraft',
+    name='Minecraft',
     container_names=['minecraft-minecraft-1'],
     node=HEAVY_NODE,
 )

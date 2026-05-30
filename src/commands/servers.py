@@ -37,6 +37,7 @@ class ServersCommands(Group):
             description='Gerencie os servidores dedicados'
         )
 
+
     @command(name="ligar", description="Liga um servidor dedicado")
     @describe(game="Qual servidor?")
     @choices(game=SERVERS_CHOICES)
@@ -86,8 +87,8 @@ class ServersCommands(Group):
             )
             await interaction.followup.send(
                 content=(
-                    "✅ Pronto! _Quando o servidor estiver pronto, "
-                    f"avisarei em <#{DISCORD_NOTIFICATIONS_CHANNEL_ID}>._"
+                    f"✅ Pronto! _Quando o servidor de **{game.value}** estiver "
+                    f"pronto, avisarei em <#{DISCORD_NOTIFICATIONS_CHANNEL_ID}>._"
                 ),
             )
         
@@ -117,6 +118,7 @@ class ServersCommands(Group):
                     "_Se você for leigo, não se desespere. Chame um dev para resolver isso._"
                 )
             )
+
 
     @command(name="desligar", description="Desligar um servidor dedicado")
     @describe(game="Qual servidor?")
@@ -158,8 +160,8 @@ class ServersCommands(Group):
             await asyncio.sleep(5)
             await interaction.followup.send(
                 content=(
-                    "✅ Pronto! _Dentro de alguns segundos o "
-                    "servidor estará completamente desligado e inacessível._"
+                    "✅ Pronto! _Dentro de alguns segundos o servidor de "
+                    f"**{game.value}** estará completamente desligado e inacessível._"
                 ),
             )
         except ConnectionError:
