@@ -14,7 +14,7 @@ client = Client(intents=Intents.default())
 
 tree = CommandTree(client)
 tree.add_command(
-    command=ServersCommands(PortainerService()),
+    ServersCommands(PortainerService()),
     guild=guild,
 )
 
