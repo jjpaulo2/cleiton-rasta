@@ -21,7 +21,9 @@ tree.add_command(
 
 @client.event
 async def on_ready():
-    logger.info("Bot conectado com sucesso!", bot=client.user.name)
+    logger.info("Bot conectado com sucesso!")
+    await tree.sync(guild=guild)
+    logger.info("Comandos sincronizados com sucesso!")
 
 
 @client.event
