@@ -1,7 +1,7 @@
-from src.models import HeavyNode, HeavyNodeControllerContainers
+from src.models import HeavyNode, HeavyNodeControllerContainers, Node
 
 
-MANAGER_NODE = HeavyNode(
+MANAGER_NODE = Node(
     name='cluster-node-0',
     endpoint_id=14,
 )
