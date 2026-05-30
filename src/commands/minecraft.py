@@ -1,4 +1,6 @@
-from discord import Interaction, Embed, Color
+import asyncio
+
+from discord import Interaction
 from discord.app_commands import Group, command
 
 from structlog import get_logger
@@ -35,6 +37,7 @@ class MinecraftCommands(Group):
                     content="⏳ Ligando a máquina remota..."
                 )
                 await self.portainer.turn_on_heavy_node()
+                await asyncio.sleep(5)  # Garantir que a máquina esteja ligando
 
             await interaction.edit_original_response(
                 content=(
