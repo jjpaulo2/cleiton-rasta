@@ -28,12 +28,25 @@ class MinecraftCommands(Group):
         )
 
         try:
+            await interaction.followup.send(
+                ephemeral=True,
+                content=(
+                    "⏳ Ligando a máquina..."
+                )
+            )
             await interaction.response.defer(ephemeral=True)
             await self.portainer.turn_on_heavy_node()
+            await interaction.followup.send(
+                ephemeral=True,
+                content=(
+                    "⏳ Iniciando o servidor de Minecraft. Isso pode levar alguns minutos..."
+                )
+            )
             self.logger.info(
                 "Máquina ligada. Iniciando o servidor de Minecraft...",
                 user=interaction.user.name
             )
+            await interaction.response.defer(ephemeral=True)
             await self.portainer.start_minecraft_server()
             await interaction.followup.send(
                 ephemeral=True,

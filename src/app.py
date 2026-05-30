@@ -7,7 +7,6 @@ from pyportainer import Portainer
 from structlog import get_logger
 
 from src.services.portainer import PortainerService
-from src.commands.general import GeneralCommands
 from src.commands.minecraft import MinecraftCommands
 from src.settings import (
     DISCORD_GUILD_ID,
