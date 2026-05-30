@@ -53,7 +53,8 @@ class PortainerService:
     async def start_minecraft_server(self):
         async for attempt in AsyncRetrying(
             stop=stop_after_attempt(5),
-            wait=wait_fixed(15)
+            wait=wait_fixed(15),
+            reraise=True
         ):
             with attempt:
                 await self.portainer.start_container(
