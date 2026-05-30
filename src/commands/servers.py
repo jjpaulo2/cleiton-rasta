@@ -84,7 +84,6 @@ class ServersCommands(Group):
                 endpoint_id=game_server.node.endpoint_id,
                 container=game_server.container_names[0],
             )
-            await interaction.delete_original_response()
             await interaction.followup.send(
                 content=(
                     "✅ Pronto! _Quando o servidor estiver pronto, "
@@ -157,7 +156,6 @@ class ServersCommands(Group):
                 container=game_server.node.controllers.turn_off,
             )
             await asyncio.sleep(5)
-            await interaction.delete_original_response()
             await interaction.followup.send(
                 content=(
                     "✅ Pronto! _Dentro de alguns segundos o "
