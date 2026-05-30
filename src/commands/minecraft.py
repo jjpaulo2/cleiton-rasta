@@ -38,8 +38,8 @@ class MinecraftCommands(Group):
 
             await interaction.edit_original_response(
                 content=(
-                    "✅ Máquina ligada com sucesso!\n"
-                    "⏳ Iniciando o servidor de Minecraft... _(isso pode levar alguns minutos)_"
+                    "⏳ Iniciando o servidor de Minecraft... "
+                    "_(isso pode levar alguns minutos)_"
                 )
             )
             self.logger.info(
@@ -49,9 +49,8 @@ class MinecraftCommands(Group):
             await self.portainer.start_minecraft_server()
             await interaction.edit_original_response(
                 content=(
-                    "✅ Máquina ligada com sucesso!\n"
-                    "✅ Servidor de Minecraft iniciado com sucesso!\n\n"
-                    f"_Quando o servidor estiver pronto, avisarei em <#{DISCORD_NOTIFICATIONS_CHANNEL_ID}>._"
+                    "✅ Pronto! _Quando o servidor estiver pronto, "
+                    f"avisarei em <#{DISCORD_NOTIFICATIONS_CHANNEL_ID}>._"
                 )
             )
 
@@ -64,8 +63,7 @@ class MinecraftCommands(Group):
             await interaction.edit_original_response(
                 content=(
                     "🔴 Ocorreu um erro ao tentar executar o comando!\n"
-                    "_Se você for leigo, não se desespere. Chame um dev para resolver isso._\n"
-                    f"```{str(e)}```"
+                    "_Se você for leigo, não se desespere. Chame um dev para resolver isso._"
                 )
             )
 
@@ -87,17 +85,13 @@ class MinecraftCommands(Group):
                 user=interaction.user.name
             )
             await interaction.edit_original_response(
-                content=(
-                    "✅ Servidor desligado com sucesso!\n"
-                    "⏳ Desligando a máquina remota..."
-                )
+                content="⏳ Desligando a máquina remota..."
             )
             await self.portainer.turn_off_heavy_node()
             await interaction.edit_original_response(
                 content=(
-                    "✅ Servidor desligado com sucesso!\n"
-                    "✅ Máquina desligada com sucesso!\n\n"
-                    f"_Dentro de alguns segundos o servidor estará completamente desligado e inacessível._"
+                    "✅ Pronto! _Dentro de alguns segundos o "
+                    "servidor estará completamente desligado e inacessível._"
                 )
             )
         
@@ -119,7 +113,6 @@ class MinecraftCommands(Group):
             await interaction.edit_original_response(
                 content=(
                     "🔴 Ocorreu um erro ao tentar executar o comando!\n"
-                    "_Se você for leigo, não se desespere. Chame um dev para resolver isso._\n"
-                    f"```{str(e)}```"
+                    "_Se você for leigo, não se desespere. Chame um dev para resolver isso._"
                 )
             )
