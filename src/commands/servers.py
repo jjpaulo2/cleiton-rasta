@@ -12,10 +12,15 @@ from src.settings.nodes import MANAGER_NODE
 from src.settings import games
 
 
-SERVERS = [
-    Choice(name=server.name, value=server)
+SERVERS = {
+    server.name: server
     for server in vars(games).values()
     if isinstance(server, GameServer)
+}
+
+SERVERS_CHOICES = [
+    Choice(name=server, value=server)
+    for server in SERVERS.keys()
 ]
 
 
@@ -34,7 +39,7 @@ class ServersCommands(Group):
 
     @command(name="ligar", description="Liga um servidor dedicado")
     @describe(game="Qual servidor?")
-    @choices(game=SERVERS)
+    @choices(game=SERVERS_CHOICES)
     async def turn_on(
         self,
         interaction: Interaction,
@@ -49,8 +54,9 @@ class ServersCommands(Group):
         try:
             await interaction.response.defer(ephemeral=True)
             
+            game_server = SERVERS[game.value.name]
             node_is_up = await self.portainer.node_is_up(
-                endpoint_id=game.value.node.endpoint_id,
+                endpoint_id=game_server.node.endpoint_id,
             )
 
             if not node_is_up:
@@ -59,7 +65,7 @@ class ServersCommands(Group):
                 )
                 await self.portainer.start_container(
                     endpoint_id=MANAGER_NODE.endpoint_id,
-                    container=game.value.node.controllers.turn_on,
+                    container=game_server.node.controllers.turn_on,
                 )
                 await asyncio.sleep(5)  # Garantir que a máquina esteja ligando
 
@@ -75,8 +81,8 @@ class ServersCommands(Group):
                 game=game.value.name,
             )
             await self.portainer.start_container(
-                endpoint_id=game.value.node.endpoint_id,
-                container=game.value.container_names[0],
+                endpoint_id=game_server.node.endpoint_id,
+                container=game_server.container_names[0],
             )
             await interaction.delete_original_response()
             await interaction.followup.send(
@@ -115,7 +121,7 @@ class ServersCommands(Group):
 
     @command(name="desligar", description="Desligar um servidor dedicado")
     @describe(game="Qual servidor?")
-    @choices(game=SERVERS)
+    @choices(game=SERVERS_CHOICES)
     async def turn_off(
         self,
         interaction: Interaction,
@@ -128,13 +134,14 @@ class ServersCommands(Group):
         )
 
         try:
+            game_server = SERVERS[game.value.name]
             await interaction.response.defer(ephemeral=True)
             await interaction.edit_original_response(
                 content="⏳ Desligando o servidor...",
             )
             await self.portainer.stop_container(
-                endpoint_id=game.value.node.endpoint_id,
-                container=game.value.container_names[0],
+                endpoint_id=game_server.node.endpoint_id,
+                container=game_server.container_names[0],
             )
             await asyncio.sleep(5)
             self.logger.info(
@@ -147,7 +154,7 @@ class ServersCommands(Group):
             )
             await self.portainer.stop_container(
                 endpoint_id=MANAGER_NODE.endpoint_id,
-                container=game.value.node.controllers.turn_off,
+                container=game_server.node.controllers.turn_off,
             )
             await asyncio.sleep(5)
             await interaction.delete_original_response()
