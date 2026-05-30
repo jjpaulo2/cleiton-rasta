@@ -1,20 +1,23 @@
+from functools import cached_property
+
 from pyportainer import Portainer
 from pyportainer.models.portainer import Endpoint
 from tenacity import AsyncRetrying, stop_after_attempt, wait_fixed
 
-from src.settings import (
-    MINECRAFT_CONTAINER_NAME,
-    PORTAINER_MANAGER_NODE_ENDPOINT_ID,
-    PORTAINER_HEAVY_NODE_ENDPOINT_ID,
-    TURN_OFF_HEAVY_NODE_CONTAINER_NAME,
-    TURN_ON_HEAVY_NODE_CONTAINER_NAME
+from src.settings.common import (
+    PORTAINER_API_KEY,
+    PORTAINER_API_URL,
 )
 
 
 class PortainerService:
 
-    def __init__(self, portainer: Portainer):
-        self.portainer = portainer
+    @cached_property
+    def portainer(self) -> Portainer:
+        return Portainer(
+            api_url=PORTAINER_API_URL,
+            api_key=PORTAINER_API_KEY
+        )
     
     async def _get_endpoint(self, endpoint_id: int) -> Endpoint:
         endpoints = await self.portainer.get_endpoints()
@@ -26,44 +29,30 @@ class PortainerService:
                 return endp
         
         raise ValueError(f"Endpoint #{endpoint_id} não encontrado.")
-
-    async def heavy_node_is_up(self) -> bool:
+    
+    async def node_is_up(self, endpoint_id: int) -> bool:
         try:
-            await self._get_endpoint(PORTAINER_HEAVY_NODE_ENDPOINT_ID)
+            await self._get_endpoint(endpoint_id)
             return True
         except ConnectionError:
             return False
-
-    async def turn_off_heavy_node(self):
-        endpoint = await self._get_endpoint(PORTAINER_MANAGER_NODE_ENDPOINT_ID)
-        await self.portainer.start_container(
-            endpoint_id=endpoint.id,
-            container_id=TURN_OFF_HEAVY_NODE_CONTAINER_NAME,
-        )
-
-    async def turn_on_heavy_node(self):
-        endpoint = await self._get_endpoint(PORTAINER_MANAGER_NODE_ENDPOINT_ID)
-        await self.portainer.start_container(
-            endpoint_id=endpoint.id,
-            container_id=TURN_ON_HEAVY_NODE_CONTAINER_NAME,
-        )
-
-    async def start_minecraft_server(self):
+    
+    async def start_container(self, endpoint_id: int, container: str):
         async for attempt in AsyncRetrying(
             stop=stop_after_attempt(6),
             wait=wait_fixed(30),
             reraise=True
         ):
             with attempt:
-                endpoint = await self._get_endpoint(PORTAINER_HEAVY_NODE_ENDPOINT_ID)
+                endpoint = await self._get_endpoint(endpoint_id)
                 await self.portainer.start_container(
                     endpoint_id=endpoint.id,
-                    container_id=MINECRAFT_CONTAINER_NAME,
+                    container_id=container,
                 )
-
-    async def stop_minecraft_server(self):
-        endpoint = await self._get_endpoint(PORTAINER_HEAVY_NODE_ENDPOINT_ID)
+    
+    async def stop_container(self, endpoint_id: int, container: str):
+        endpoint = await self._get_endpoint(endpoint_id)
         await self.portainer.stop_container(
             endpoint_id=endpoint.id,
-            container_id=MINECRAFT_CONTAINER_NAME,
+            container_id=container,
         )
