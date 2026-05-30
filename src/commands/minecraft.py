@@ -29,13 +29,16 @@ class MinecraftCommands(Group):
 
         try:
             await interaction.response.defer(ephemeral=True)
-            await interaction.edit_original_response(
-                content="⏳ Ligando a máquina remota..."
-            )
-            await self.portainer.turn_on_heavy_node()
+
+            if not (await self.portainer.heavy_node_is_up()):
+                await interaction.edit_original_response(
+                    content="⏳ Ligando a máquina remota..."
+                )
+                await self.portainer.turn_on_heavy_node()
+
             await interaction.edit_original_response(
                 content=(
-                    "✅ Máquina ligada com sucesso!\n\n"
+                    "✅ Máquina ligada com sucesso!\n"
                     "⏳ Iniciando o servidor de Minecraft... _(isso pode levar alguns minutos)_"
                 )
             )
@@ -46,7 +49,7 @@ class MinecraftCommands(Group):
             await self.portainer.start_minecraft_server()
             await interaction.edit_original_response(
                 content=(
-                    "✅ Máquina ligada com sucesso!\n\n"
+                    "✅ Máquina ligada com sucesso!\n"
                     "✅ Servidor de Minecraft iniciado com sucesso!\n\n"
                     f"_Quando o servidor estiver pronto, avisarei em <#{DISCORD_NOTIFICATIONS_CHANNEL_ID}>._"
                 )
@@ -60,8 +63,8 @@ class MinecraftCommands(Group):
             )
             await interaction.edit_original_response(
                 content=(
-                    "🔴 Ocorreu um erro ao tentar executar o comando!\n\n"
-                    "_Se você for leigo, não se desespere. Chame um dev para resolver isso._\n\n"
+                    "🔴 Ocorreu um erro ao tentar executar o comando!\n"
+                    "_Se você for leigo, não se desespere. Chame um dev para resolver isso._\n"
                     f"```{str(e)}```"
                 )
             )
@@ -85,14 +88,14 @@ class MinecraftCommands(Group):
             )
             await interaction.edit_original_response(
                 content=(
-                    "✅ Servidor desligado com sucesso!\n\n"
+                    "✅ Servidor desligado com sucesso!\n"
                     "⏳ Desligando a máquina remota..."
                 )
             )
             await self.portainer.turn_off_heavy_node()
             await interaction.edit_original_response(
                 content=(
-                    "✅ Servidor desligado com sucesso!\n\n"
+                    "✅ Servidor desligado com sucesso!\n"
                     "✅ Máquina desligada com sucesso!\n\n"
                     f"_Dentro de alguns segundos o servidor estará completamente desligado e inacessível._"
                 )
@@ -116,7 +119,7 @@ class MinecraftCommands(Group):
             await interaction.edit_original_response(
                 content=(
                     "🔴 Ocorreu um erro ao tentar executar o comando!\n"
-                    "_Se você for leigo, não se desespere. Chame um dev para resolver isso._\n\n"
+                    "_Se você for leigo, não se desespere. Chame um dev para resolver isso._\n"
                     f"```{str(e)}```"
                 )
             )
