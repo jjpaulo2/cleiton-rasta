@@ -38,9 +38,9 @@ class ServersCommands(Group):
         )
 
 
-    @command(name="ligar", description="Liga um servidor dedicado")
+    @command(name="ligar", description="Liga um servidor dedicado de jogo")
     @rename(game="jogo")
-    @describe(game="Qual servidor?")
+    @describe(game="Selecione o servidor que deseja ligar.")
     @choices(game=SERVERS_CHOICES)
     async def turn_on(
         self,
@@ -124,10 +124,10 @@ class ServersCommands(Group):
             )
 
 
-    @command(name="desligar", description="Desligar um servidor dedicado")
+    @command(name="desligar", description="Desligar um servidor dedicado de jogo")
     @rename(
-        game="qual jogo?",
-        turn_off_machine="desligar a máquina?"
+        game="jogo",
+        turn_off_machine="desligar a máquina"
     )
     @describe(
         game="Selecione o servidor que deseja desligar.",
