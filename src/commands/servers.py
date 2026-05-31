@@ -1,7 +1,7 @@
 import asyncio
 
 from discord import Interaction
-from discord.app_commands import Choice, Group, command, describe, choices
+from discord.app_commands import Choice, Group, command, describe, choices, rename
 
 from structlog import get_logger
 
@@ -39,6 +39,7 @@ class ServersCommands(Group):
 
 
     @command(name="ligar", description="Liga um servidor dedicado")
+    @rename(game="jogo")
     @describe(game="Qual servidor?")
     @choices(game=SERVERS_CHOICES)
     async def turn_on(
@@ -81,10 +82,13 @@ class ServersCommands(Group):
                 user=interaction.user.name,
                 game=game.value,
             )
-            await self.portainer.start_container(
-                endpoint_id=game_server.node.endpoint_id,
-                container=game_server.container_names[0],
-            )
+            
+            for container_name in game_server.container_names:
+                await self.portainer.start_container(
+                    endpoint_id=game_server.node.endpoint_id,
+                    container=container_name,
+                )
+            
             await interaction.edit_original_response(
                 content=(
                     f"✅ Pronto! _Quando o servidor de **{game.value}** estiver "
@@ -121,12 +125,20 @@ class ServersCommands(Group):
 
 
     @command(name="desligar", description="Desligar um servidor dedicado")
-    @describe(game="Qual servidor?")
+    @rename(
+        game="qual jogo?",
+        turn_off_machine="desligar a máquina?"
+    )
+    @describe(
+        game="Selecione o servidor que deseja desligar.",
+        turn_off_machine="Deixe sempre essa opção ativa para garantir economia de recursos."
+    )
     @choices(game=SERVERS_CHOICES)
     async def turn_off(
         self,
         interaction: Interaction,
         game: Choice[str],
+        turn_off_machine: bool = True,
     ):
         self.logger.info(
             "Desligando o servidor...",
@@ -140,24 +152,30 @@ class ServersCommands(Group):
             await interaction.edit_original_response(
                 content="⏳ Desligando o servidor...",
             )
-            await self.portainer.stop_container(
-                endpoint_id=game_server.node.endpoint_id,
-                container=game_server.container_names[0],
-            )
+            
+            for container_name in game_server.container_names[::-1]:
+                await self.portainer.stop_container(
+                    endpoint_id=game_server.node.endpoint_id,
+                    container=container_name,
+                )
+
             await asyncio.sleep(5)
-            self.logger.info(
-                "Servidor parado. Desligando a máquina...",
-                user=interaction.user.name,
-                game=game.value,
-            )
-            await interaction.edit_original_response(
-                content="⏳ Desligando a máquina remota...",
-            )
-            await self.portainer.stop_container(
-                endpoint_id=MANAGER_NODE.endpoint_id,
-                container=game_server.node.controllers.turn_off,
-            )
-            await asyncio.sleep(5)
+
+            if turn_off_machine:
+                self.logger.info(
+                    "Servidor parado. Desligando a máquina...",
+                    user=interaction.user.name,
+                    game=game.value,
+                )
+                await interaction.edit_original_response(
+                    content="⏳ Desligando a máquina remota...",
+                )
+                await self.portainer.stop_container(
+                    endpoint_id=MANAGER_NODE.endpoint_id,
+                    container=game_server.node.controllers.turn_off,
+                )
+                await asyncio.sleep(5)
+            
             await interaction.edit_original_response(
                 content=(
                     "✅ Pronto! _Dentro de alguns segundos o servidor de "
