@@ -191,7 +191,7 @@ class ServersCommands(Group):
                 await interaction.edit_original_response(
                     content="⏳ Desligando a máquina remota...",
                 )
-                await self.portainer.stop_container(
+                await self.portainer.start_container(
                     endpoint_id=MANAGER_NODE.endpoint_id,
                     container=game_server.node.controllers.turn_off,
                 )
