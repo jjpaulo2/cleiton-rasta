@@ -85,7 +85,7 @@ class ServersCommands(Group):
                 endpoint_id=game_server.node.endpoint_id,
                 container=game_server.container_names[0],
             )
-            await interaction.followup.send(
+            await interaction.edit_original_response(
                 content=(
                     f"✅ Pronto! _Quando o servidor de **{game.value}** estiver "
                     f"pronto, avisarei em <#{DISCORD_NOTIFICATIONS_CHANNEL_ID}>._"
@@ -158,7 +158,7 @@ class ServersCommands(Group):
                 container=game_server.node.controllers.turn_off,
             )
             await asyncio.sleep(5)
-            await interaction.followup.send(
+            await interaction.edit_original_response(
                 content=(
                     "✅ Pronto! _Dentro de alguns segundos o servidor de "
                     f"**{game.value}** estará completamente desligado e inacessível._"
