@@ -148,13 +148,19 @@ class ServersCommands(Group):
     )
     @choices(
         game=SERVERS_CHOICES,
-        keep_machine=BOOLEAN_CHOICES,
+        keep_machine=[
+            Choice(name="Sou leigo", value=0),
+            Choice(name="Não sei o que é isso", value=0),
+            Choice(name="Ignorar", value=0),
+            Choice(name="Sei o que estou fazendo e desejo desligar a máquina", value=0),
+            Choice(name="Sei o que estou fazendo e desejo manter a máquina ligada", value=1),
+        ],
     )
     async def turn_off(
         self,
         interaction: Interaction,
         game: Choice[str],
-        keep_machine: Choice[str] = CHOICE_FALSE
+        keep_machine: Choice[int] = None
     ):
         self.logger.info(
             "Desligando o servidor...",
@@ -176,7 +182,7 @@ class ServersCommands(Group):
                 )
                 await asyncio.sleep(5)
 
-            if keep_machine.value == 0:
+            if (not keep_machine) or (keep_machine.value == 0):
                 self.logger.info(
                     "Servidor parado. Desligando a máquina...",
                     user=interaction.user.name,
