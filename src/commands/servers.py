@@ -132,8 +132,8 @@ class ServersCommands(Group):
     @describe(
         game="Selecione o servidor que deseja desligar.",
         keep_machine=(
-            "ATENÇÃO! Se você é leigo, não use esse parâmetro! "
-            "Se ativado, a máquina remota não será desligada, apenas o servidor."
+            "ATENÇÃO! Se você é leigo, não use isso! "
+            "Se ativado, a máquina remota não será desligada."
         )
     )
     @choices(
