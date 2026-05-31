@@ -127,7 +127,7 @@ class ServersCommands(Group):
     @command(name="desligar", description="Desligar um servidor dedicado de jogo")
     @rename(
         game="jogo",
-        turn_off_machine="desligar a máquina"
+        turn_off_machine="desligar_máquina"
     )
     @describe(
         game="Selecione o servidor que deseja desligar.",
