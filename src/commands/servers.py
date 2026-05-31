@@ -139,17 +139,17 @@ class ServersCommands(Group):
     @choices(
         game=SERVERS_CHOICES,
         keep_machine=[
-            Choice(name="Ignorar.", value=False),
-            Choice(name="Não sei o que é isso.", value=False),
-            Choice(name="Sei o que estou fazendo. Desejo desligar a máquina.", value=False),
-            Choice(name="Sei o que estou fazendo. Desejo manter a máquina ligada.", value=True),
+            Choice(name="Ignorar.", value=0),
+            Choice(name="Não sei o que é isso.", value=0),
+            Choice(name="Sei o que estou fazendo. Desejo desligar a máquina.", value=0),
+            Choice(name="Sei o que estou fazendo. Desejo manter a máquina ligada.", value=1),
         ]
     )
     async def turn_off(
         self,
         interaction: Interaction,
         game: Choice[str],
-        keep_machine: bool = False,
+        keep_machine: Choice[int] = 0,
     ):
         self.logger.info(
             "Desligando o servidor...",
