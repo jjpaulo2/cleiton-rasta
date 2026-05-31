@@ -172,7 +172,7 @@ class ServersCommands(Group):
 
             await asyncio.sleep(5)
 
-            if not keep_machine:
+            if not keep_machine.value:
                 self.logger.info(
                     "Servidor parado. Desligando a máquina...",
                     user=interaction.user.name,
