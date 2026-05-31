@@ -127,18 +127,29 @@ class ServersCommands(Group):
     @command(name="desligar", description="Desligar um servidor dedicado de jogo")
     @rename(
         game="jogo",
-        turn_off_machine="desligar_máquina"
+        keep_machine="manter_máquina"
     )
     @describe(
         game="Selecione o servidor que deseja desligar.",
-        turn_off_machine="Deixe sempre essa opção ativa para garantir economia de recursos."
+        keep_machine=(
+            "ATENÇÃO! Se você é leigo, não use esse parâmetro! "
+            "Se ativado, a máquina remota não será desligada, apenas o servidor."
+        )
     )
-    @choices(game=SERVERS_CHOICES)
+    @choices(
+        game=SERVERS_CHOICES,
+        keep_machine=[
+            Choice(name="Ignorar.", value=False),
+            Choice(name="Não sei o que é isso.", value=False),
+            Choice(name="Sei o que estou fazendo. Desejo desligar a máquina.", value=False),
+            Choice(name="Sei o que estou fazendo. Desejo manter a máquina ligada.", value=True),
+        ]
+    )
     async def turn_off(
         self,
         interaction: Interaction,
         game: Choice[str],
-        turn_off_machine: bool = True,
+        keep_machine: bool = False,
     ):
         self.logger.info(
             "Desligando o servidor...",
@@ -161,7 +172,7 @@ class ServersCommands(Group):
 
             await asyncio.sleep(5)
 
-            if turn_off_machine:
+            if not keep_machine:
                 self.logger.info(
                     "Servidor parado. Desligando a máquina...",
                     user=interaction.user.name,
