@@ -18,3 +18,11 @@ CORE_KEEPER = GameServer(
     ],
     node=HEAVY_NODE,
 )
+
+VALHEIM = GameServer(
+    name='Valheim',
+    container_names=[
+        'valheim-server-1'
+    ],
+    node=HEAVY_NODE,
+)
