@@ -15,6 +15,8 @@ class AudioService:
         return str(audio)
 
     async def play(self, channel: VoiceChannel, filename: str):
+        self.logger.info("Tocando áudio...", audio=filename, channel=channel.name)
+
         try:
             voice = await channel.connect()
             audio = FFmpegPCMAudio(self._get_audio_file(filename))
