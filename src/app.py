@@ -7,9 +7,7 @@ from discord import (
     Message,
     VoiceChannel,
     Member,
-    VoiceState,
-    FFmpegPCMAudio,
-    ClientException
+    VoiceState
 )
 from discord.abc import GuildChannel
 from discord.app_commands import CommandTree
