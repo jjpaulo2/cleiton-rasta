@@ -3,7 +3,7 @@ FROM python:3.13-alpine3.22
 ARG USER=cleiton
 
 RUN apk update && \
-    apk add --no-cache ffmpeg opus-dev && \
+    apk add --no-cache ffmpeg opus && \
     rm -rf /var/cache/apk/* && \
     addgroup $USER && \
     adduser -D -G $USER $USER
