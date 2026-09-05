@@ -2,7 +2,10 @@ FROM python:3.13-alpine3.22
 
 ARG USER=cleiton
 
-RUN addgroup $USER && \
+RUN apk update && \
+    apk add --no-cache ffmpeg && \
+    rm -rf /var/cache/apk/* && \
+    addgroup $USER && \
     adduser -D -G $USER $USER
 
 USER "${USER}:${USER}"
@@ -15,10 +18,7 @@ WORKDIR /srv
 
 ENV PATH="/home/${USER}/.local/bin:$PATH"
 
-RUN apk update && \
-    apk add --no-cache ffmpeg && \
-    rm -rf /var/cache/apk/* && \
-    pip install --upgrade pip && \
+RUN pip install --upgrade pip && \
     pip install poetry && \
     poetry config virtualenvs.create false
 
