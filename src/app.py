@@ -82,3 +82,5 @@ async def on_voice_state_update(member: Member, before: VoiceState, after: Voice
         return
     if 'baphomet' in member.display_name.lower():
         await audio.play(after.channel, "baphomet.mp3")
+    if 'stone' in member.display_name.lower() and len(after.channel.members) > 1:
+        await audio.play(after.channel, "stonemask.mp3")
