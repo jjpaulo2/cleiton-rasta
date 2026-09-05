@@ -1,9 +1,22 @@
-from discord import Client, Intents, Object, Message, VoiceChannel
+from asyncio import sleep
+
+from discord import (
+    Client,
+    Intents,
+    Object,
+    Message,
+    VoiceChannel,
+    Member,
+    VoiceState,
+    FFmpegPCMAudio,
+    ClientException
+)
 from discord.abc import GuildChannel
 from discord.app_commands import CommandTree
 from structlog import get_logger
 
 from src.services.portainer import PortainerService
+from src.services.audio import AudioService
 from src.commands.servers import ServersCommands
 from src.settings.common import DISCORD_GUILD_ID
 
@@ -12,9 +25,12 @@ logger = get_logger()
 guild = Object(DISCORD_GUILD_ID)
 client = Client(intents=Intents.default())
 
+audio = AudioService(logger)
+portainer = PortainerService()
+
 tree = CommandTree(client)
 tree.add_command(
-    ServersCommands(PortainerService()),
+    ServersCommands(portainer),
     guild=guild,
 )
 
@@ -54,3 +70,15 @@ async def on_guild_channel_create(channel: GuildChannel):
             ),
             silent=True
         )
+
+
+@client.event
+async def on_voice_state_update(member: Member, before: VoiceState, after: VoiceState):
+    if before.channel:
+        return
+    if 'lobby' not in after.channel.name.lower():
+        return
+    if member.guild and member.guild.voice_client:
+        return
+    if 'baphomet' in member.display_name.lower():
+        await audio.play(after.channel, "baphomet.mp3")
