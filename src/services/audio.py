@@ -4,10 +4,6 @@ from src.settings.common import AUDIOS_FOLDER
 
 
 class AudioService:
-    _ffmpeg_kwargs = {
-        "before_options": "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
-        "options": "-vn -sn -dn",
-    }
 
     def __init__(self, logger):
         self.logger = logger
@@ -23,7 +19,7 @@ class AudioService:
 
         try:
             voice = await channel.connect()
-            audio = FFmpegPCMAudio(self._get_audio_file(filename), **self._ffmpeg_kwargs)
+            audio = FFmpegPCMAudio(self._get_audio_file(filename))
             audio = PCMVolumeTransformer(audio, volume=0.15)
             audio.read()
             voice.play(audio, after=lambda e: run(voice.disconnect()))
