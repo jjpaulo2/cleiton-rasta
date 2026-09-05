@@ -7,7 +7,8 @@ from discord import (
     Message,
     VoiceChannel,
     Member,
-    VoiceState
+    VoiceState,
+    opus
 )
 from discord.abc import GuildChannel
 from discord.app_commands import CommandTree
@@ -38,6 +39,12 @@ async def on_ready():
     logger.info("Bot conectado com sucesso!")
     await tree.sync(guild=guild)
     logger.info("Comandos sincronizados com sucesso!")
+    try:
+        if not opus.is_loaded():
+            opus.load_opus("/usr/lib/libopus.so.0")
+            logger.info("Libopus carregado com sucesso!")
+    except Exception as exc:
+        logger.error("Erro ao carregar o libopus!", error=str(exc))
 
 
 @client.event
