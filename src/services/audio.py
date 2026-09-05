@@ -21,7 +21,7 @@ class AudioService:
             voice = await channel.connect()
             audio = FFmpegPCMAudio(self._get_audio_file(filename))
             audio = PCMVolumeTransformer(audio, volume=0.15)
-            voice.play(audio, after=lambda e: run(voice.disconnect(force=True)))
+            voice.play(audio, after=lambda e: run(voice.disconnect()))
 
         except ClientException as exc:
             if voice := channel.guild.voice_client:
