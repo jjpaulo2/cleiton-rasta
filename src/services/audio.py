@@ -5,7 +5,6 @@ from src.settings.common import AUDIOS_FOLDER
 
 class AudioService:
     _ffmpeg_kwargs = {
-        "pipe": True,
         "before_options": "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
         "options": "-vn -sn -dn",
     }
