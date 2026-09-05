@@ -15,7 +15,10 @@ WORKDIR /srv
 
 ENV PATH="/home/${USER}/.local/bin:$PATH"
 
-RUN pip install --upgrade pip && \
+RUN apk update && \
+    apk add --no-cache ffmpeg && \
+    rm -rf /var/cache/apk/* && \
+    pip install --upgrade pip && \
     pip install poetry && \
     poetry config virtualenvs.create false
 
