@@ -78,7 +78,11 @@ async def on_voice_state_update(member: Member, before: VoiceState, after: Voice
         return
     if member.guild and member.guild.voice_client:
         return
+    if len(after.channel.members) <= 1:
+        return
     if 'baphomet' in member.display_name.lower():
         await audio.play(after.channel, "baphomet.mp3")
-    if 'stone' in member.display_name.lower() and len(after.channel.members) > 1:
+    if 'stone' in member.display_name.lower():
         await audio.play(after.channel, "stonemask.mp3")
+    if 'bode' in member.display_name.lower():
+        await audio.play(after.channel, "bode.mp3")
