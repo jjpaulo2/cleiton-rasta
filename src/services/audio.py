@@ -24,6 +24,8 @@ class AudioService:
             voice.play(audio, after=lambda e: run(voice.disconnect()))
 
         except ClientException as exc:
+            if voice := channel.guild.voice_client:
+                await voice.disconnect()
             self.logger.error(
                 "Erro ao reproduzir áudio no canal de voz.",
                 error=str(exc),
