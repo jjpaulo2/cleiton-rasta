@@ -22,7 +22,7 @@ class AudiosCommands(Group):
         self.audio = audio
         self.logger = get_logger()
         super().__init__(
-            name='audios',
+            name='audio',
             description='Toque efeitos sonoros nas salas de voz'
         )
 
