@@ -1,6 +1,6 @@
 import asyncio
 
-from discord import Interaction
+from discord import Interaction, Game
 from discord.app_commands import Choice, Group, command, describe, choices, rename
 
 from structlog import get_logger
@@ -10,6 +10,7 @@ from src.services.portainer import PortainerService
 from src.settings.common import DISCORD_NOTIFICATIONS_CHANNEL_ID
 from src.settings.nodes import MANAGER_NODE
 from src.settings import games
+from src.utils import set_default_activity
 
 
 SERVERS = {
@@ -99,6 +100,9 @@ class ServersCommands(Group):
                 )
                 await asyncio.sleep(5)
             
+            await interaction.client.change_presence(
+                activity=Game(name=game.name)
+            )
             await interaction.edit_original_response(
                 content=(
                     f"✅ Pronto! _Quando o servidor de **{game.value}** estiver "
@@ -196,7 +200,8 @@ class ServersCommands(Group):
                     container=game_server.node.controllers.turn_off,
                 )
                 await asyncio.sleep(5)
-            
+
+            await set_default_activity(interaction.client)
             await interaction.edit_original_response(
                 content=(
                     "✅ Pronto! _Dentro de alguns segundos o servidor de "

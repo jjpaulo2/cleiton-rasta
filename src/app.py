@@ -6,7 +6,6 @@ from discord import (
     VoiceChannel,
     Member,
     VoiceState,
-    CustomActivity,
     opus
 )
 from discord.abc import GuildChannel
@@ -18,6 +17,7 @@ from src.services.audio import AudioService
 from src.commands.servers import ServersCommands
 from src.commands.audios import AudiosCommands
 from src.settings.common import DISCORD_GUILD_ID
+from src.utils import set_default_activity
 
 
 logger = get_logger()
@@ -49,9 +49,7 @@ async def on_ready():
             logger.info("Libopus carregado com sucesso!")
     except Exception as exc:
         logger.error("Erro ao carregar o libopus!", error=str(exc))
-    await client.change_presence(
-        activity=CustomActivity("Xingando caixistas na internet"),
-    )
+    await set_default_activity(client)
 
 
 @client.event
