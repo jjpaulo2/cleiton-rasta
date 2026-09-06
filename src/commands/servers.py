@@ -101,7 +101,7 @@ class ServersCommands(Group):
                 await asyncio.sleep(5)
             
             await interaction.client.change_presence(
-                activity=Game(name=game.name)
+                activity=Game(name=f"🎮 {game.name}")
             )
             await interaction.edit_original_response(
                 content=(
