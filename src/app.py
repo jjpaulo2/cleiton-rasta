@@ -1,5 +1,3 @@
-from asyncio import sleep
-
 from discord import (
     Client,
     Intents,
@@ -17,6 +15,7 @@ from structlog import get_logger
 from src.services.portainer import PortainerService
 from src.services.audio import AudioService
 from src.commands.servers import ServersCommands
+from src.commands.audios import AudiosCommands
 from src.settings.common import DISCORD_GUILD_ID
 
 
@@ -24,12 +23,16 @@ logger = get_logger()
 guild = Object(DISCORD_GUILD_ID)
 client = Client(intents=Intents.default())
 
-audio = AudioService(logger)
+audio = AudioService()
 portainer = PortainerService()
 
 tree = CommandTree(client)
 tree.add_command(
     ServersCommands(portainer),
+    guild=guild,
+)
+tree.add_command(
+    AudiosCommands(audio),
     guild=guild,
 )
 
