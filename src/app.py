@@ -6,6 +6,7 @@ from discord import (
     VoiceChannel,
     Member,
     VoiceState,
+    CustomActivity,
     opus
 )
 from discord.abc import GuildChannel
@@ -48,6 +49,9 @@ async def on_ready():
             logger.info("Libopus carregado com sucesso!")
     except Exception as exc:
         logger.error("Erro ao carregar o libopus!", error=str(exc))
+    await client.change_presence(
+        activity=CustomActivity("Xingando caixistas na internet"),
+    )
 
 
 @client.event
