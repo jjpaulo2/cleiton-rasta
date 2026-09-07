@@ -4,6 +4,7 @@ from discord.app_commands import Choice, Group, command, describe, choices, rena
 from structlog import get_logger
 
 from src.services.audio import AudioService
+from src.utils import set_nickname
 
 
 AUDIOS_CHOICES = [
@@ -59,12 +60,20 @@ class AudiosCommands(Group):
             await interaction.edit_original_response(
                 content=f"⏳ Tocando ``{audio.value}`` em {channel.mention}..."
             )
+            await set_nickname(
+                member=interaction.guild.me,
+                nickname="Seu Loro"
+            )
             await self.audio.play(
                 channel=channel,
                 filename=audio.value
             )
             await interaction.edit_original_response(
                 content=f"✅ Efeito sonoro ``{audio.value}`` tocado com sucesso em {channel.mention}!"
+            )
+            await set_nickname(
+                member=interaction.guild.me,
+                nickname=None
             )
             self.logger.info(
                 f"Efeito sonoro tocado com sucesso!",
@@ -73,14 +82,18 @@ class AudiosCommands(Group):
                 audio=audio.value
             )
 
-        except Exception as e:
+        except Exception as exc:
+            await interaction.edit_original_response(
+                content="🔴 Ocorreu um erro ao tentar tocar o efeito sonoro."
+            )
+            await set_nickname(
+                member=interaction.guild.me,
+                nickname=None
+            )
             self.logger.error(
                 f"Erro ao tentar tocar efeito sonoro!",
                 user=interaction.user.name,
                 channel=channel.name,
                 audio=audio.value,
-                error=str(e)
-            )
-            await interaction.edit_original_response(
-                content="🔴 Ocorreu um erro ao tentar tocar o efeito sonoro."
+                error=str(exc)
             )
