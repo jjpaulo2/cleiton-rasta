@@ -3,14 +3,21 @@ from discord.app_commands import Choice, Group, command, describe, choices, rena
 
 from structlog import get_logger
 
+from src.models import AudioEffect
 from src.services.audio import AudioService
+from src.settings import audios
 from src.utils import set_nickname
 
 
+AUDIOS = {
+    audio.title: audio
+    for audio in vars(audios).values()
+    if isinstance(audio, AudioEffect)
+}
+
 AUDIOS_CHOICES = [
-    Choice(name="🗿 Ooooh StoneMask...", value="stonemask.mp3"),
-    Choice(name="👹 Baphomet!", value="baphomet.mp3"),
-    Choice(name="🐐 Bééé...", value="bode.mp3"),
+    Choice(name=audio, value=audio)
+    for audio in AUDIOS.keys()
 ]
 
 
@@ -60,21 +67,14 @@ class AudiosCommands(Group):
             await interaction.edit_original_response(
                 content=f"⏳ Tocando ``{audio.value}`` em {channel.mention}..."
             )
-            await set_nickname(
-                member=interaction.guild.me,
-                nickname="Seu Loro"
-            )
             await self.audio.play(
                 channel=channel,
-                filename=audio.value
+                filename=AUDIOS[audio.value].filename
             )
             await interaction.edit_original_response(
                 content=f"✅ Efeito sonoro ``{audio.value}`` tocado com sucesso em {channel.mention}!"
             )
-            await set_nickname(
-                member=interaction.guild.me,
-                nickname=None
-            )
+            
             self.logger.info(
                 f"Efeito sonoro tocado com sucesso!",
                 user=interaction.user.name,

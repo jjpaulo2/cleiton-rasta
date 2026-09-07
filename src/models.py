@@ -22,3 +22,8 @@ class GameServer:
     name: str
     container_names: list[str]
     node: HeavyNode
+
+@dataclass
+class AudioEffect:
+    title: str
+    filename: str

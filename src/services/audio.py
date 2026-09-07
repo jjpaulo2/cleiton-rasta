@@ -31,7 +31,7 @@ class AudioService:
             audio = FFmpegPCMAudio(self._get_audio_file(filename))
             audio = PCMVolumeTransformer(audio, volume=0.5)
             audio.read()
-            await sleep(0.5)             
+            await sleep(0.5)
             loop = get_running_loop()
             voice.play(audio, after=lambda _: run_coroutine_threadsafe(
                 coro=self._disconnect(voice),

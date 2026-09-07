@@ -17,6 +17,7 @@ from src.services.audio import AudioService
 from src.commands.servers import ServersCommands
 from src.commands.audios import AudiosCommands
 from src.settings.common import DISCORD_GUILD_ID
+from src.settings.actions import NICKNAMES_TO_TRIGGER_AUDIO
 from src.utils import set_default_activity, set_nickname
 
 
@@ -92,11 +93,9 @@ async def on_voice_state_update(member: Member, before: VoiceState, after: Voice
         return
     if len(after.channel.members) <= 1:
         return
-    await set_nickname(member.guild.me, "Seu Loro")
-    if 'baphomet' in member.display_name.lower():
-        await audio.play(after.channel, "baphomet.mp3")
-    if 'stone' in member.display_name.lower():
-        await audio.play(after.channel, "stonemask.mp3")
-    if 'bode' in member.display_name.lower():
-        await audio.play(after.channel, "bode.mp3")
-    await set_nickname(member.guild.me, None)
+    for nick, audio_effect in NICKNAMES_TO_TRIGGER_AUDIO.items():
+        if nick in member.display_name.lower():
+            await set_nickname(member.guild.me, "Seu Loro")
+            await audio.play(after.channel, audio_effect.filename)
+            await set_nickname(member.guild.me)
+            return
