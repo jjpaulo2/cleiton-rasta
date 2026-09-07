@@ -55,7 +55,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message: Message):
-    if message.author.bot:
+    if message.author.id == message.guild.me.id:
         return
     if isinstance(message.channel, VoiceChannel):
         logger.info(
@@ -65,6 +65,11 @@ async def on_message(message: Message):
             message=message.content
         )
         await message.delete()
+        if not message.author.bot:
+            await message.channel.send(
+                content=(f"{message.author.mention} você não pode enviar mensagens aqui!"),
+                silent=True
+            )
 
 
 @client.event
