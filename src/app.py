@@ -57,6 +57,9 @@ async def on_ready():
 async def on_message(message: Message):
     if message.author.id == message.guild.me.id:
         return
+    if client.user in message.mentions:
+        await message.reply("Vai tomar no cu!")
+        return
     if isinstance(message.channel, VoiceChannel):
         logger.info(
             "Mensagem enviada em canal de voz, apagando mensagem...",
