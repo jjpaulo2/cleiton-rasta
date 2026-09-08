@@ -6,11 +6,11 @@ from discord.app_commands import Choice, Group, command, describe, choices, rena
 from structlog import get_logger
 
 from src.models import GameServer
+from src.services.profile import ProfileService
 from src.services.portainer import PortainerService
 from src.settings.common import DISCORD_NOTIFICATIONS_CHANNEL_ID
 from src.settings.nodes import MANAGER_NODE
 from src.settings import games
-from src.utils import set_default_activity
 
 
 SERVERS = {
@@ -39,8 +39,10 @@ class ServersCommands(Group):
     def __init__(
         self,
         portainer: PortainerService,
+        profile: ProfileService
     ):
         self.portainer = portainer
+        self.profile = profile
         self.logger = get_logger()
         super().__init__(
             name='servidor',
@@ -201,7 +203,7 @@ class ServersCommands(Group):
                 )
                 await asyncio.sleep(5)
 
-            await set_default_activity(interaction.client)
+            await self.profile.set_default_presence()
             await interaction.edit_original_response(
                 content=(
                     "✅ Pronto! _Dentro de alguns segundos o servidor de "

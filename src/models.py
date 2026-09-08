@@ -27,3 +27,9 @@ class GameServer:
 class AudioEffect:
     title: str
     filename: str
+
+@dataclass
+class BotProfile:
+    nickname: str
+    avatar_filename: str
+    presence: str

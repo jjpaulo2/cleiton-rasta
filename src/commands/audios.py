@@ -6,7 +6,6 @@ from structlog import get_logger
 from src.models import AudioEffect
 from src.services.audio import AudioService
 from src.settings import audios
-from src.utils import set_nickname
 
 
 AUDIOS = {
@@ -85,10 +84,6 @@ class AudiosCommands(Group):
         except Exception as exc:
             await interaction.edit_original_response(
                 content="🔴 Ocorreu um erro ao tentar tocar o efeito sonoro."
-            )
-            await set_nickname(
-                member=interaction.guild.me,
-                nickname=None
             )
             self.logger.error(
                 f"Erro ao tentar tocar efeito sonoro!",

@@ -1,6 +1,8 @@
 from asyncio import get_running_loop, run_coroutine_threadsafe, sleep
+
 from discord import VoiceChannel, FFmpegPCMAudio, PCMVolumeTransformer, ClientException, VoiceClient
 from structlog import get_logger
+
 from src.settings.common import AUDIOS_FOLDER
 
 

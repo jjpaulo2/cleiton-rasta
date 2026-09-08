@@ -14,11 +14,13 @@ from structlog import get_logger
 
 from src.services.portainer import PortainerService
 from src.services.audio import AudioService
-from src.commands.servers import ServersCommands
+from src.services.profile import ProfileService
 from src.commands.audios import AudiosCommands
+from src.commands.profiles import ProfilesCommands
+from src.commands.servers import ServersCommands
+from src.settings.profiles import SEU_LORO
 from src.settings.common import DISCORD_GUILD_ID
 from src.settings.actions import NICKNAMES_TO_TRIGGER_AUDIO
-from src.utils import set_default_activity, set_nickname
 
 
 logger = get_logger()
@@ -27,14 +29,19 @@ client = Client(intents=Intents.default())
 
 audio = AudioService()
 portainer = PortainerService()
+profile = ProfileService(client, DISCORD_GUILD_ID)
 
 tree = CommandTree(client)
 tree.add_command(
-    ServersCommands(portainer),
+    ServersCommands(portainer, profile),
     guild=guild,
 )
 tree.add_command(
     AudiosCommands(audio),
+    guild=guild,
+)
+tree.add_command(
+    ProfilesCommands(profile),
     guild=guild,
 )
 
@@ -50,12 +57,13 @@ async def on_ready():
             logger.info("Libopus carregado com sucesso!")
     except Exception as exc:
         logger.error("Erro ao carregar o libopus!", error=str(exc))
-    await set_default_activity(client)
+    if main_guild := client.get_guild(DISCORD_GUILD_ID):
+        await profile.set_default_presence() 
 
 
 @client.event
 async def on_message(message: Message):
-    if message.author.id == message.guild.me.id:
+    if message.guild and message.guild.me.id == message.author.id:
         return
     if client.user in message.mentions:
         await message.reply("Vai tomar no cu!")
@@ -103,7 +111,5 @@ async def on_voice_state_update(member: Member, before: VoiceState, after: Voice
         return
     for nick, audio_effect in NICKNAMES_TO_TRIGGER_AUDIO.items():
         if nick in member.display_name.lower():
-            await set_nickname(member.guild.me, "Seu Loro")
             await audio.play(after.channel, audio_effect.filename)
-            await set_nickname(member.guild.me)
             return
