@@ -14,11 +14,11 @@ from structlog import get_logger
 
 from src.services.portainer import PortainerService
 from src.services.audio import AudioService
+from src.services.speak import SpeakService
 from src.services.profile import ProfileService
 from src.commands.audios import AudiosCommands
 from src.commands.profiles import ProfilesCommands
 from src.commands.servers import ServersCommands
-from src.settings.profiles import SEU_LORO
 from src.settings.common import DISCORD_GUILD_ID
 from src.settings.actions import NICKNAMES_TO_TRIGGER_AUDIO
 
@@ -28,6 +28,7 @@ guild = Object(DISCORD_GUILD_ID)
 client = Client(intents=Intents.default())
 
 audio = AudioService()
+speak = SpeakService()
 portainer = PortainerService()
 profile = ProfileService(client, DISCORD_GUILD_ID)
 
@@ -37,7 +38,7 @@ tree.add_command(
     guild=guild,
 )
 tree.add_command(
-    AudiosCommands(audio),
+    AudiosCommands(audio, speak),
     guild=guild,
 )
 tree.add_command(

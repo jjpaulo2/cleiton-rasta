@@ -216,3 +216,8 @@ __marimo__/
 
 # Built Visual Studio Code Extensions
 *.vsix
+
+# Generated gTTS files
+message.mp3
+temp*.mp3
+gtts.mp3

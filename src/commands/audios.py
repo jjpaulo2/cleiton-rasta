@@ -1,10 +1,10 @@
 from discord import Interaction, VoiceChannel
 from discord.app_commands import Choice, Group, command, describe, choices, rename
-
 from structlog import get_logger
 
 from src.models import AudioEffect
 from src.services.audio import AudioService
+from src.services.speak import SpeakService
 from src.settings import audios
 
 
@@ -25,8 +25,10 @@ class AudiosCommands(Group):
     def __init__(
         self,
         audio: AudioService,
+        speak: SpeakService
     ):
         self.audio = audio
+        self.speak_service = speak
         self.logger = get_logger()
         super().__init__(
             name='audio',
@@ -35,15 +37,16 @@ class AudiosCommands(Group):
 
 
     @command(name="tocar", description="Toca um efeito sonoro na sala de voz")
-    @rename(audio="áudio")
     @rename(channel="canal")
-    @describe(audio="Selecione o efeito sonoro que deseja tocar.")
+    @describe(channel="Destino da mensagem")
+    @rename(audio="áudio")
+    @describe(audio="O efeito sonoro será tocado no canal")
     @choices(audio=AUDIOS_CHOICES)
     async def play(
         self,
         interaction: Interaction,
-        audio: Choice[str],
         channel: VoiceChannel,
+        audio: Choice[str],
     ):
         self.logger.info(
             f"Pedindo para tocar efeito sonoro...",
@@ -90,5 +93,73 @@ class AudiosCommands(Group):
                 user=interaction.user.name,
                 channel=channel.name,
                 audio=audio.value,
+                error=str(exc)
+            )
+
+    @command(name="falar", description="Mande uma mensagem para um canal de voz")
+    @rename(channel="canal")
+    @describe(channel="Destino da mensagem")
+    @rename(message="mensagem")
+    @describe(message="Esta mensagem será falada (lida pelo bot) no canal de voz")
+    async def speak(
+        self,
+        interaction: Interaction,
+        channel: VoiceChannel,
+        message: str,
+    ):
+        self.logger.info(
+            f"Enviando mensagem para sala de voz...",
+            user=interaction.user.name,
+            channel=channel.name,
+            message=message
+        )
+
+        try:
+            await interaction.response.defer(ephemeral=True)
+
+            if 'lobby' not in channel.name.lower():
+                await interaction.edit_original_response(content="🔴 Só é possível falar em um **lobby**!")
+                return
+
+            if len(channel.members) < 1:
+                await interaction.edit_original_response(content="🔴 O canal precisa ter pelo menos **uma pessoa** conectada!")
+                return
+
+            if len(message) < 1:
+                await interaction.edit_original_response(content="🔴 A mensagem não pode estar vazia!")
+                return
+
+            if len(message) > 100:
+                await interaction.edit_original_response(content="🔴 A mensagem não pode ter mais de **100 caracteres**!")
+                return
+
+            await interaction.edit_original_response(
+                content=f"⏳ Falando em {channel.mention}..."
+            )
+            await self.audio.play(
+                channel=channel,
+                filename=await self.speak_service.write(message)
+            )
+            await self.speak_service.clean()
+            await interaction.edit_original_response(
+                content=f"✅ Mensagem falada com sucesso em {channel.mention}!"
+            )
+
+            self.logger.info(
+                f"Mensagem falada com sucesso!",
+                user=interaction.user.name,
+                channel=channel.name,
+                message=message
+            )
+
+        except Exception as exc:
+            await interaction.edit_original_response(
+                content="🔴 Ocorreu um erro ao tentar falar na sala de voz."
+            )
+            self.logger.error(
+                f"Erro ao tentar falar na sala de voz!",
+                user=interaction.user.name,
+                channel=channel.name,
+                message=message,
                 error=str(exc)
             )
