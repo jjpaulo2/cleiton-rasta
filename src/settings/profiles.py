@@ -9,14 +9,8 @@ CLEITON_RASTA = BotProfile(
 
 SEU_LORO = BotProfile(
     nickname="Seu Loro",
-    avatar_filename="louro.jpeg",
+    avatar_filename="seu-loro.jpeg",
     presence="😈 Espalhando desinformação...",
-)
-
-RATAO_XBOX = BotProfile(
-    nickname="Ratão do Xbox",
-    avatar_filename="xbox.png",
-    presence="🎮 Jogando no Xbox...",
 )
 
 STONE_MASK = BotProfile(
@@ -29,4 +23,10 @@ LUKITA = BotProfile(
     nickname="Lukita",
     avatar_filename="lukita.png",
     presence="😜 Sendo besta por aí...",
+)
+
+COSMIC = BotProfile(
+    nickname="Cosmic",
+    avatar_filename="cosmic.png",
+    presence="🤬 Dando rage...",
 )
