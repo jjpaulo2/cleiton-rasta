@@ -1,8 +1,9 @@
-from src.settings.audios import BAPHOMET, STONE_MASK, BODE
+from src.settings import audios
 
 
 NICKNAMES_TO_TRIGGER_AUDIO = {
-    'baphomet': BAPHOMET,
-    'stone': STONE_MASK,
-    'bode': BODE
+    'baphomet': audios.BAPHOMET,
+    'stone': audios.STONE_MASK,
+    'bode': audios.BODE,
+    'diegó': audios.DIEGO
 }

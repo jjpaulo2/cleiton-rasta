@@ -6,6 +6,11 @@ STONE_MASK = AudioEffect(
     filename="stonemask.mp3"
 )
 
+DIEGO = AudioEffect(
+    title="🤤 Diegóóó...",
+    filename="diego.mp3"
+)
+
 BAPHOMET = AudioEffect(
     title="👹 Baphomet!",
     filename="baphomet.mp3"
@@ -22,7 +27,7 @@ AI_MEU_C = AudioEffect(
 )
 
 WITCH_DOCTOR = AudioEffect(
-    title="🧙‍♂️ Ooh look at it go! (Witch Doctor)",
+    title="🧙 Ooh look at it go! (Witch Doctor)",
     filename="witch-doctor.mp3"
 )
 
