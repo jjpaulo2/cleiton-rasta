@@ -9,5 +9,5 @@ DISCORD_NOTIFICATIONS_CHANNEL_ID = int(getenv("DISCORD_NOTIFICATIONS_CHANNEL_ID"
 PORTAINER_API_URL = getenv("PORTAINER_API_URL", "")
 PORTAINER_API_KEY = getenv("PORTAINER_API_KEY", "")
 
-AUDIOS_FOLDER = Path(__file__).parent.parent / "static" / "audio"
+AUDIOS_FOLDER = Path(__file__).parent.parent / "static" / "audios"
 AVATARS_FOLDER = Path(__file__).parent.parent / "static" / "avatars"
