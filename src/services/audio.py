@@ -12,6 +12,8 @@ class AudioService:
         self.logger = get_logger()
 
     def _get_audio_file(self, filename: str) -> str:
+        if filename.startswith("/"):
+            return filename
         audio = AUDIOS_FOLDER / filename
         if not audio.exists():
             raise FileNotFoundError(f"Audio file '{filename}' not found in '{AUDIOS_FOLDER}'.")

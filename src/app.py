@@ -58,8 +58,7 @@ async def on_ready():
             logger.info("Libopus carregado com sucesso!")
     except Exception as exc:
         logger.error("Erro ao carregar o libopus!", error=str(exc))
-    if main_guild := client.get_guild(DISCORD_GUILD_ID):
-        await profile.set_default_presence() 
+    await profile.set_default_presence() 
 
 
 @client.event
