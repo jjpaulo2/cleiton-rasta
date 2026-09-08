@@ -5,5 +5,6 @@ NICKNAMES_TO_TRIGGER_AUDIO = {
     'baphomet': audios.BAPHOMET,
     'stone': audios.STONE_MASK,
     'bode': audios.BODE,
-    'diegó': audios.DIEGO
+    'diegó': audios.DIEGO,
+    'loro': audios.SEU_LORO,
 }

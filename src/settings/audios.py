@@ -11,6 +11,11 @@ DIEGO = AudioEffect(
     filename="diego.mp3"
 )
 
+SEU_LORO = AudioEffect(
+    title="🦜 Seu Loro...",
+    filename="seu-loro.mp3"
+)
+
 BAPHOMET = AudioEffect(
     title="👹 Baphomet!",
     filename="baphomet.mp3"
@@ -26,12 +31,22 @@ AI_MEU_C = AudioEffect(
     filename="ai-meu-c.mp3"
 )
 
-WITCH_DOCTOR = AudioEffect(
-    title="🧙 Ooh look at it go! (Witch Doctor)",
-    filename="witch-doctor.mp3"
-)
-
 OLHA_A_PEDRA = AudioEffect(
     title="🪨 Olha a pedra!",
     filename="olha-a-pedra.mp3"
+)
+
+BOLSONARISTA = AudioEffect(
+    title="🤤 Mija na minha boca mito!",
+    filename="bolsonarista.mp3"
+)
+
+HUMOR = AudioEffect(
+    title="😂 Humor!",
+    filename="humor.mp3"
+)
+
+VTMNC = AudioEffect(
+    title="🤬 Vai tomar no cu!",
+    filename="vtmnc.mp3"
 )

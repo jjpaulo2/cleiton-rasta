@@ -103,6 +103,8 @@ async def on_guild_channel_create(channel: GuildChannel):
 async def on_voice_state_update(member: Member, before: VoiceState, after: VoiceState):
     if before.channel:
         return
+    if member.bot:
+        return
     if 'lobby' not in after.channel.name.lower():
         return
     if member.guild and member.guild.voice_client:
