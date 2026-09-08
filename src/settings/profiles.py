@@ -18,3 +18,15 @@ RATAO_XBOX = BotProfile(
     avatar_filename="xbox.png",
     presence="🎮 Jogando no Xbox...",
 )
+
+STONE_MASK = BotProfile(
+    nickname="StoneMask",
+    avatar_filename="stonemask.png",
+    presence="💰 Farmando rewards...",
+)
+
+LUKITA = BotProfile(
+    nickname="Lukita",
+    avatar_filename="lukita.png",
+    presence="😜 Sendo besta por aí...",
+)
