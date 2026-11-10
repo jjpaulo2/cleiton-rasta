@@ -56,7 +56,7 @@ class AudiosCommands(Group):
         )
 
         try:
-            await interaction.response.defer(ephemeral=True)
+            await interaction.response.defer()
 
             if 'lobby' not in channel.name.lower():
                 await interaction.edit_original_response(content="🔴 Só é possível tocar em um **lobby**!")
@@ -115,7 +115,7 @@ class AudiosCommands(Group):
         )
 
         try:
-            await interaction.response.defer(ephemeral=True)
+            await interaction.response.defer()
 
             if 'lobby' not in channel.name.lower():
                 await interaction.edit_original_response(content="🔴 Só é possível falar em um **lobby**!")
@@ -142,7 +142,10 @@ class AudiosCommands(Group):
             )
             await self.speak_service.clean()
             await interaction.edit_original_response(
-                content=f"✅ Mensagem falada com sucesso em {channel.mention}!"
+                content=(
+                    f"✅ Mensagem falada com sucesso em {channel.mention}!\n"
+                    f"> \"{message}\""
+                )
             )
 
             self.logger.info(
